@@ -4,6 +4,7 @@ const Items = require('../../Models/Items-Model')
 router.get('/', async (req, res) => {
     try {
         let x = await Items.find().select('-_id').sort({ ItemName: 1 })
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
         res.json(x)
     } catch (error) {
         res.status(401).json({ msg: "Server Error" })

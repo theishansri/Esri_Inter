@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, NavLink, Navbar, Nav, NavbarBrand, NavItem } from 'reactstrap'
+import { Container, NavLink, Navbar, Nav, NavbarBrand, NavItem } from 'reactstrap';
 
 export class AppNavBar extends Component {
     render() {
@@ -10,9 +10,9 @@ export class AppNavBar extends Component {
                     <NavbarBrand href="/">Items</NavbarBrand>
                     <Nav>
                         <NavItem>
-                            <NavLink>Register</NavLink>
+                            <NavLink className="link-color" style={{color:'white'}}>Register</NavLink>
                         </NavItem>
-                        <NavItem><NavLink>Login</NavLink></NavItem>
+                        <NavItem><NavLink className="link-color" style={{color:'white'}}>Login</NavLink></NavItem>
                     </Nav>
                 </Container>
             </Navbar>
