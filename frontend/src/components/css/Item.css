@@ -1,0 +1,14 @@
+.card{
+    border:2px solid grey;
+    border-radius: 12px;
+    box-shadow: 2px 2px black;
+    margin-bottom: '8rem';
+  }
+  .quantity_add{
+      border:1px solid black;
+      padding: 1px 2px 5px 17px;
+      background-color: #1d2124;
+  }
+  .xs{
+      height: '2px';
+  }
