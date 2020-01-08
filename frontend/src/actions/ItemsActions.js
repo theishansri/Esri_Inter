@@ -1,7 +1,12 @@
 export const addCart = item => dispatch => {
-    console.log("Ac", item)
     dispatch({
         type: 'ADDCART',
         payload: item
+    })
+}
+export const itemsArray = items => dispatch => {
+    dispatch({
+        type: 'ITEMS_GET',
+        payload: items
     })
 }

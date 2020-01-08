@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, NavLink, Navbar, ListGroup, ListGroupItem, Nav, NavbarBrand, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Container, NavLink, Navbar, ListGroup, Alert, ListGroupItem, Nav, NavbarBrand, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup } from 'reactstrap';
 import "../../node_modules/font-awesome/css/font-awesome.min.css"
 import { connect } from 'react-redux';
 class AppNavBar extends Component {
@@ -13,8 +13,36 @@ class AppNavBar extends Component {
         })
     };
     render() {
-        const { cart } = this.props;
-        console.log(cart)
+        const { cart, price } = this.props;
+        console.log(cart, Object.keys(cart).length, "ds")
+        const cart_items = (
+            <React.Fragment>
+                <ModalHeader toggle={this.toggle}>Your Cart Items</ModalHeader>
+                <ModalBody>
+                    <Form onSubmit={this.onSubmit}>
+                        <FormGroup>
+                            <ListGroup>
+                                {Object.entries(cart).map(([i, index]) => {
+                                    return (
+                                        <ListGroupItem key={i}><b>ItemName: </b>{i}&nbsp;<span className="ml-5"><b>Quantity: &nbsp;</b></span>{index}
+                                            <span className="ml-5"><b>Price:&nbsp;</b>{price[i] * index}</span>
+                                        </ListGroupItem >
+                                    )
+                                })}
+                            </ListGroup>
+                            <span><Button color="danger" style={{ marginTop: '2rem' }} onClick={this.toggle}>Cancel</Button>
+                                <Button color="primary" className="ml-2" style={{ marginTop: '2rem' }}>Procced</Button></span>
+                        </FormGroup>
+                    </Form>
+                </ModalBody>
+            </React.Fragment>
+        )
+        const empty_cart = (
+            <React.Fragment>
+                <ModalHeader>Cart is Empty</ModalHeader>
+                <Alert color="danger" className="mt-3" style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto' }}>Please Add Items to Your Cart</Alert>
+            </React.Fragment>
+        )
         return (
             <div>
                 <Navbar color="dark" dark expand="sm" className="mb-5">
@@ -29,24 +57,7 @@ class AppNavBar extends Component {
                     </Container>
                 </Navbar>
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Your Cart Items</ModalHeader>
-                    <ModalBody>
-                        <Form onSubmit={this.onSubmit}>
-                            <FormGroup>
-                                <ListGroup>
-                                    {Object.entries(cart).map(([i, index]) => {
-                                        return (
-                                            <ListGroupItem key={i}>{i}&nbsp;<span className="ml-5">Quantity: &nbsp;</span>{index}
-                                            <span className="ml-3">Price:</span>
-                                            </ListGroupItem >
-                                        )
-                                    })}
-                                </ListGroup>
-                                <span><Button color="danger" style={{ marginTop: '2rem' }} onClick={this.toggle}>Cancel</Button>
-                                    <Button color="primary" className="ml-2" style={{ marginTop: '2rem' }}>Procced</Button></span>
-                            </FormGroup>
-                        </Form>
-                    </ModalBody>
+                    {Object.keys(cart).length > 0 ? cart_items : empty_cart}
                 </Modal>
             </div>
         )
@@ -54,7 +65,8 @@ class AppNavBar extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        cart: state.items.items
+        cart: state.items.items,
+        price: state.items.cart
     }
 }
 export default connect(mapStateToProps, null)(AppNavBar)

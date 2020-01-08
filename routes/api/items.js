@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Items = require('../../Models/Items-Model')
-
-router.get('/', async (req, res) => {
+const auth = require('../../Middleware/auth');
+router.get('/', auth, async (req, res) => {
     try {
         let x = await Items.find().select('-_id').sort({ ItemName: 1 })
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')

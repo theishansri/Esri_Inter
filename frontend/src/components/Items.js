@@ -2,16 +2,18 @@ import React, { Component } from 'react'
 import {
     Container,
     Card, CardText, CardBody, CardFooter,
-    CardTitle, CardSubtitle, Button
+    CardTitle, CardSubtitle, Button, Pagination, PaginationItem, PaginationLink
 } from 'reactstrap';
 import axios from 'axios';
 import "./css/Item.css";
-import { addCart } from '../actions/ItemsActions'
+import { addCart, itemsArray } from '../actions/ItemsActions'
 import { connect } from 'react-redux';
 class Items extends Component {
     state = {
         items: [],
-        item_count: {}
+        item_count: {},
+        currentPage: 1,
+        perPage: 6
     }
     async componentDidMount() {
         let x = await axios.get('http://localhost:5000/api/items');
@@ -23,6 +25,8 @@ class Items extends Component {
             items: [...this.state.items, ...x.data],
             item_count: k
         });
+        this.props.items(this.state.items)
+
     }
     handleMinus = (itemname) => {
         this.setState(prev => ({
@@ -50,11 +54,24 @@ class Items extends Component {
             }
         }))
     }
+    handleClick = (pageNumber) => {
+        this.setState({
+            currentPage: pageNumber
+        })
+    }
     render() {
+        const { items, currentPage, perPage } = this.state;
+        const indexOfLastTodo = currentPage * perPage;
+        const indexOfFirstTodo = indexOfLastTodo - perPage;
+        const currentItems = items.slice(indexOfFirstTodo, indexOfLastTodo);
+        const pageNumbers = []
+        for (let i = 1; i <= Math.ceil(items.length / perPage); i++) {
+            pageNumbers.push(i)
+        }
         return (
             <Container style={{ position: 'relative', marginLeft: '19rem' }}>
                 <div className="row">
-                    {this.state.items.map((i, index) => {
+                    {currentItems.map((i, index) => {
                         return (
                             <Card className="mr-5 col-sm-4 mb-4 card" key={index}>
                                 <CardBody>
@@ -66,13 +83,23 @@ class Items extends Component {
                                             &nbsp;<span style={{ color: 'white', marginTop: '4px' }}>{this.state.item_count[i.ItemName]}</span>&nbsp;<Button disabled={this.state.item_count[i.ItemName] === i.Quantity ? true : false} onClick={() => this.handlePlus(i.ItemName)} style={{ padding: '2px', margin: '6px', width: '2rem' }}>&#43;</Button></span>
                                     </div>
                                     <CardFooter>
-                                        <Button color="dark" onClick={this.handleAdd} block>Add To Cart &#128722;</Button>
+                                        <Button color="dark" onClick={this.handleAdd} block>Add To Cart <span role="img" alt="Cart_logo">&#128722;</span></Button>
                                     </CardFooter>
                                 </CardBody>
                             </Card>
                         )
                     })}
                 </div>
+                <React.Fragment>
+                    <Pagination style={{ textAlign: 'center', position: 'relative', left: '21rem' }} className="mt-4" aria-label="page Numbers">
+                        {pageNumbers.map((i) => {
+                            return (
+                                <PaginationItem key={i}>
+                                    <PaginationLink onClick={() => this.handleClick(i)}>{i}</PaginationLink>
+                                </PaginationItem>
+                            )
+                        })}
+                    </Pagination></React.Fragment>
             </Container>
         )
     }
@@ -81,7 +108,7 @@ class Items extends Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         addToCart: (items) => dispatch(addCart(items)),
-        // items:(items)=>dispatch(itemsArray(items))
+        items: (items) => dispatch(itemsArray(items))
     }
 }
 export default connect(null, mapDispatchToProps)(Items)
