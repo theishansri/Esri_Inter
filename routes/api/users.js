@@ -13,9 +13,9 @@ router.post('/', async (req, res) => {
         if (user) {
             return res.status(400).json({ msg: "User already exists" })
         }
+        console.log("sdsad",user)
         //Hash create salt;
-        const salt = await bcrypt.genSalt(10);
-        const txtpassword = await (bcrypt.hash(password, salt))
+        
 
         const newUser = new User({
             firstName,
@@ -23,7 +23,21 @@ router.post('/', async (req, res) => {
             email,
             password: txtpassword
         });
+        bcrypt.genSalt(10,(err,salt)=>{
+            bcrypt.hash(newUser.password, salt, (err, hash) =>{
+                if(err) throw err;
+          newUser.password = hash;
+          newUser.save()
+            .then(user=>{
+                jwt.sign(
+                    { id: user.id },
+                    process.env.SECRET_KEY)
+                
+            })
+            })
+        })
         let x = await newUser.save();
+        console.log('x1',x)
         jwt.sign({
             id: x.id
         },

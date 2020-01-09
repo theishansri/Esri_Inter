@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Container, NavLink, Navbar, ListGroup, Alert, ListGroupItem, Nav, NavbarBrand, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup } from 'reactstrap';
-import "../../node_modules/font-awesome/css/font-awesome.min.css"
+import "../../node_modules/font-awesome/css/font-awesome.min.css";
+import Register from './auth/register-Modal';
 import { connect } from 'react-redux';
 class AppNavBar extends Component {
     state = {
@@ -14,7 +15,6 @@ class AppNavBar extends Component {
     };
     render() {
         const { cart, price } = this.props;
-        console.log(cart, Object.keys(cart).length, "ds")
         const cart_items = (
             <React.Fragment>
                 <ModalHeader toggle={this.toggle}>Your Cart Items</ModalHeader>
@@ -49,10 +49,12 @@ class AppNavBar extends Component {
                     <Container>
                         <NavbarBrand href="/">Items</NavbarBrand>
                         <Nav>
+                            <NavItem >
+                                <Register/>
+                            </NavItem>
                             <NavItem>
                                 <NavLink className="link-color" style={{ color: 'white' }}><Button onClick={this.toggle} size="md"><i className="fa fa-shopping-cart"></i></Button></NavLink>
                             </NavItem>
-                            <NavItem><NavLink className="link-color" style={{ color: 'white' }}><Button size="md">Login</Button></NavLink></NavItem>
                         </Nav>
                     </Container>
                 </Navbar>
