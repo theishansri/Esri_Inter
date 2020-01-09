@@ -6,6 +6,9 @@ const dotenv = require('dotenv');
 const items = require('./routes/api/items');
 const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
+const cors=require('cors');
+//Allow Cors
+app.use(cors());
 //req.body.read allow
 app.use(express.json());
 //Allow to read env file

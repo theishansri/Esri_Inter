@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const User=require('../Models/User-Model')
+const User = require('../Models/User-Model')
 function auth(req, res, next) {
     const token = req.header('x-auth-token');
     if (!token) {

@@ -41,8 +41,10 @@ router.post('/', async (req, res) => {
 })
 router.get('/user', auth, async (req, res) => {
     let user = await User.findById(req.user.id).select('-password');
+    user = user.toJSON();
+    user['name'] = user.firstName + ' ' + user.lastName
     res.json({
-        user
+        ...user
     })
 })
 module.exports = router;

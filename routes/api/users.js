@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 router.post('/', async (req, res) => {
-    const { email, firstName, lastName, password } = req.body
+    const { email, firstName, lastName, password } = req.body;
     if (!email || !firstName || !lastName || !password) {
         return res.status(400).json({ msg: "Please enter all fields" })
     }

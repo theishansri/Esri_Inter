@@ -1,7 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Container, NavLink, Navbar, ListGroup, Alert, ListGroupItem, Nav, NavbarBrand, NavItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup } from 'reactstrap';
 import "../../node_modules/font-awesome/css/font-awesome.min.css"
 import { connect } from 'react-redux';
+import RegisterModal from './auth/RegisterModal';
+import Logout from './auth/Logout';
+import Login from './auth/LoginModal';
+import PropTypes from 'prop-types';
 class AppNavBar extends Component {
     state = {
         modal: false,
@@ -12,9 +16,12 @@ class AppNavBar extends Component {
             modal: !this.state.modal
         })
     };
+    static propTypes = {
+        auth: PropTypes.object.isRequired
+    }
     render() {
         const { cart, price } = this.props;
-        console.log(cart, Object.keys(cart).length, "ds")
+        const { isAuthenticated, user } = this.props.auth
         const cart_items = (
             <React.Fragment>
                 <ModalHeader toggle={this.toggle}>Your Cart Items</ModalHeader>
@@ -43,16 +50,41 @@ class AppNavBar extends Component {
                 <Alert color="danger" className="mt-3" style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto' }}>Please Add Items to Your Cart</Alert>
             </React.Fragment>
         )
+        const logout = (
+            <Fragment>
+                <NavItem>
+                    <span className="navbar-text mr-3">
+                        <strong>{user ? `Welcome ${user.name}` : null}</strong>
+                    </span>
+                </NavItem>
+                <NavItem>
+                    <Logout />
+                </NavItem>
+            </Fragment>
+        )
+        const login = (
+            <Fragment>
+                <NavItem>
+                    <RegisterModal />
+                </NavItem>
+                <NavItem>
+                    <Login />
+                </NavItem>
+            </Fragment>
+        )
         return (
             <div>
                 <Navbar color="dark" dark expand="sm" className="mb-5">
                     <Container>
                         <NavbarBrand href="/">Items</NavbarBrand>
                         <Nav>
+                            {isAuthenticated ? logout : login}
+
+
                             <NavItem>
-                                <NavLink className="link-color" style={{ color: 'white' }}><Button onClick={this.toggle} size="md"><i className="fa fa-shopping-cart"></i></Button></NavLink>
+                                <NavLink className="link-color" style={{ color: 'white' }}><i className="fa fa-shopping-cart"></i></NavLink>
                             </NavItem>
-                            <NavItem><NavLink className="link-color" style={{ color: 'white' }}><Button size="md">Login</Button></NavLink></NavItem>
+
                         </Nav>
                     </Container>
                 </Navbar>
@@ -66,7 +98,9 @@ class AppNavBar extends Component {
 const mapStateToProps = (state) => {
     return {
         cart: state.items.items,
-        price: state.items.cart
+        price: state.items.cart,
+        isAuthenticated: state.auth.isAuthenticated,
+        auth: state.auth
     }
 }
 export default connect(mapStateToProps, null)(AppNavBar)

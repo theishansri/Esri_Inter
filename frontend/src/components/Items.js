@@ -83,7 +83,7 @@ class Items extends Component {
                                             &nbsp;<span style={{ color: 'white', marginTop: '4px' }}>{this.state.item_count[i.ItemName]}</span>&nbsp;<Button disabled={this.state.item_count[i.ItemName] === i.Quantity ? true : false} onClick={() => this.handlePlus(i.ItemName)} style={{ padding: '2px', margin: '6px', width: '2rem' }}>&#43;</Button></span>
                                     </div>
                                     <CardFooter>
-                                        <Button color="dark" onClick={this.handleAdd} block>Add To Cart <span role="img" alt="Cart_logo">&#128722;</span></Button>
+                                        <Button color="dark" onClick={this.handleAdd} block>Add To Cart <span role="img" aria-label="Cart_logo">&#128722;</span></Button>
                                     </CardFooter>
                                 </CardBody>
                             </Card>
