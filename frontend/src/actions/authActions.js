@@ -11,7 +11,6 @@ export const login = ({ email, password }) => async (dispatch) => {
             headers: {
                 'Content-Type': 'application/json'
             }
-
         }
         const body = JSON.stringify({ email, password })
         let x = await axios.post('http://localhost:5000/api/auth', body, config)
@@ -69,7 +68,6 @@ export const loadUser = () => async (dispatch, getState) => {
 }
 export const tokenConfig = getState => {
     const token = getState().auth.token;
-    console.log('auth', token)
     const config = {
         headers: {
             'Content-Type': 'application/json'

@@ -8,6 +8,7 @@ import axios from 'axios';
 import "./css/Item.css";
 import { addCart, itemsArray } from '../actions/ItemsActions'
 import { connect } from 'react-redux';
+import { tokenConfig } from "../actions/authActions"
 class Items extends Component {
     state = {
         items: [],
@@ -16,7 +17,18 @@ class Items extends Component {
         perPage: 6
     }
     async componentDidMount() {
-        let x = await axios.get('http://localhost:5000/api/items');
+        const token = localStorage.getItem('token');
+        const config = {
+            'Content-Type': 'application/json'
+        }
+        if (token) {
+            config['x-auth-token'] = token;
+        }
+        let x = await axios.get('http://localhost:5000/api/items', {
+            headers: {
+                ...config
+            }
+        });
         let k = {}
         for (let i = 0; i < x.data.length; i++) {
             k[x.data[i]['ItemName']] = 0
@@ -68,7 +80,7 @@ class Items extends Component {
         for (let i = 1; i <= Math.ceil(items.length / perPage); i++) {
             pageNumbers.push(i)
         }
-        return (
+        const display = (
             <Container style={{ position: 'relative', marginLeft: '19rem' }}>
                 <div className="row">
                     {currentItems.map((i, index) => {
@@ -102,13 +114,31 @@ class Items extends Component {
                     </Pagination></React.Fragment>
             </Container>
         )
+        const notAuthenticated = (
+            <Container className="mt-3">
+                <strong color="light">Please Login First...</strong>
+            </Container>
+        )
+        const { isAuthenticated } = this.props;
+        return (
+            <div>
+                {isAuthenticated ? display : notAuthenticated}
+            </div>
+
+        )
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         addToCart: (items) => dispatch(addCart(items)),
-        items: (items) => dispatch(itemsArray(items))
+        items: (items) => dispatch(itemsArray(items)),
+        settoken: () => dispatch(tokenConfig())
     }
 }
-export default connect(null, mapDispatchToProps)(Items)
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Items)

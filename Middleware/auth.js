@@ -1,6 +1,5 @@
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const User = require('../Models/User-Model')
 function auth(req, res, next) {
     const token = req.header('x-auth-token');
     if (!token) {
@@ -14,10 +13,7 @@ function auth(req, res, next) {
             next();
         } catch (error) {
             res.status(400).json({ msg: "Token is invalid" })
-
         }
-
     }
 }
-
 module.exports = auth;
